@@ -45,6 +45,7 @@ const PhaserGame: React.FC = () => {
 
       // Add player character
       const player = this.physics.add.sprite(400, 300, "character");
+      
       player.setCollideWorldBounds(true);
 
       // Define animations for character movement
@@ -119,6 +120,7 @@ const PhaserGame: React.FC = () => {
     ): void {
       const speed = 200;
       player.setVelocity(0);
+  
 
       if (xKey.isDown) {
         player.anims.play("x", true);
