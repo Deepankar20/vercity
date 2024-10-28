@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 import { api } from "@/utils/api";
 
 import "@/styles/globals.css";
+import SocketProvider from "@/context/SocketContext";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -19,7 +20,9 @@ const MyApp: AppType<{ session: Session | null }> = ({
   return (
     <SessionProvider session={session}>
       <main className={`font-sans ${inter.variable}`}>
-        <Component {...pageProps} />
+        <SocketProvider>
+          <Component {...pageProps} />
+        </SocketProvider>
       </main>
     </SessionProvider>
   );
