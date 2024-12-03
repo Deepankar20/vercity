@@ -5,6 +5,7 @@ import { Event } from "../types/eventEnums";
 export default class SocketService {
   private _io: Server;
   private users: SocketUserMapping = {};
+  private userRoom: [{ room: string; data: {} }] = [{ room: "", data: {} }];
 
   constructor() {
     this._io = new Server({
@@ -29,9 +30,17 @@ export default class SocketService {
       socket.on(Event.PLAYERJOIN, (data: userType) => {
         console.log(data.name, " joined room ", data.room);
 
-        socket.join(data.room);
+        this.userRoom.push({ room: data.room, data });
 
-        io.to(data.room).emit(Event.PLAYERJOINREPLY, data);
+        const currentRoomUsers = this.userRoom.filter(
+          (e) => e.room === data.room
+        );
+
+        const usersInRoom = currentRoomUsers.map((e) => e.data);
+
+        socket.join(data.room);
+        io.emit(Event.PLAYERJOINREPLY, usersInRoom);
+        // io.to(data.room).emit(Event.PLAYERJOINREPLY, data);
       });
 
       socket.on(Event.PLAYERMOVE, (data: userPos) => {

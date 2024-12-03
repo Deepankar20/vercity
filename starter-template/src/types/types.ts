@@ -7,7 +7,12 @@ export const Event = {
   CREATEROOM: "createRoom",
 };
 
-export interface ISocketContext {}
+export interface ISocketContext {
+  playerJoin: (data: userType) => void;
+  createRoom: (data: room) => void;
+  playerMove: (data: userPos) => void;
+  newPlayer: userType[];
+}
 
 export interface SocketProviderProps {
   children?: React.ReactNode;

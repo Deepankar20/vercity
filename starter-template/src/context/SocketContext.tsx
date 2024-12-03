@@ -20,7 +20,7 @@ export const useSocket = () => {
 
 const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   const [socket, setSocket] = useState<Socket>();
-  const [newPlayer, setNewPlayer] = useState<userType>();
+  const [newPlayer, setNewPlayer] = useState<userType[]>([]);
 
   const createRoom = useCallback(
     (data: room) => {
@@ -52,8 +52,14 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   );
 
   const playerJoinReply = useCallback(
-    (data: userType) => {
-      setNewPlayer(data);
+    (data: userType[]) => {
+      setNewPlayer((_prev) => {
+        const combined = [..._prev, ...data];
+        const uniquePlayers = [
+          ...new Map(combined.map((player) => [player.name, player])).values(),
+        ];
+        return uniquePlayers;
+      });
     },
     [socket],
   );
@@ -62,8 +68,6 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
 
   useEffect(() => {
     const _socket = io("http://localhost:8000");
-    console.log('hi');
-    
 
     _socket.on(Event.PLAYERJOINREPLY, playerJoinReply);
 
@@ -79,7 +83,7 @@ const SocketProvider: React.FC<SocketProviderProps> = ({ children }) => {
   }, []);
   return (
     <SocketContext.Provider
-      value={{ createRoom, playerJoin, playerMove, socket, newPlayer }}
+      value={{ createRoom, playerJoin, playerMove, newPlayer }}
     >
       {children}
     </SocketContext.Provider>

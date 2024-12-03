@@ -2,6 +2,8 @@
 import Phaser from "phaser";
 import handlePlayerMovement from "../utils/playerMovement";
 
+
+
 class MainScene extends Phaser.Scene {
   private player!: Phaser.Physics.Arcade.Sprite;
   private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
@@ -21,9 +23,11 @@ class MainScene extends Phaser.Scene {
 
   create() {
     const { width, height } = this.scale;
+   
     this.add.image(width / 2, height / 2, "background");
 
-    this.player = this.physics.add.sprite(400, 300, "character");
+    this.player = this.physics.add.sprite(0, 0, "character");
+
     this.player.setCollideWorldBounds(true);
 
     this.anims.create({
@@ -78,7 +82,10 @@ class MainScene extends Phaser.Scene {
 
   update() {
     handlePlayerMovement(this.player, this.cursors, this.xKey);
-    
+  }
+
+  addPlayers(){
+
   }
 }
 
